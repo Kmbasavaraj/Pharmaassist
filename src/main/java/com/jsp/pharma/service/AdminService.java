@@ -3,6 +3,7 @@ package com.jsp.pharma.service;
 import org.springframework.stereotype.Service;
 
 import com.jsp.pharma.entity.Admin;
+import com.jsp.pharma.exception.AdminNotFoundByIdException;
 import com.jsp.pharma.mapper.AdminMapper;
 import com.jsp.pharma.repository.AdminRepository;
 import com.jsp.pharma.requestdtos.AdminRequest;
@@ -22,6 +23,12 @@ public class AdminService {
 	public AdminResponse addAdmin(AdminRequest adminRequest) {
 		Admin admin = adminRepository.save(adminMapper.mapToAdmin(adminRequest, new Admin()));
 		return adminMapper.mapToAdminResponse(admin);
+	}
+	
+	public AdminResponse findAdminById(String adminId) {
+		return adminRepository.findById(adminId)
+							.map(adminMapper::mapToAdminResponse)
+							.orElseThrow(()->new AdminNotFoundByIdException("Admin Not Found"));
 	}
 	
 }
