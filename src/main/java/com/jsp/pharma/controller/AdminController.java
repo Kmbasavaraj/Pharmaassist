@@ -5,10 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jsp.pharma.exception.AdminNotFoundByIdException;
+import com.jsp.pharma.exception.AdminNotFoundException;
 import com.jsp.pharma.requestdtos.AdminRequest;
 import com.jsp.pharma.responsedtos.AdminResponse;
 import com.jsp.pharma.service.AdminService;
@@ -62,5 +64,22 @@ public class AdminController {
 	public ResponseEntity<ResponseStructure<AdminResponse>> findAdminById(@PathVariable String adminId) {
 		AdminResponse response = adminService.findAdminById(adminId);
 		return responseBuilder.success(HttpStatus.FOUND, "Admin Found", response);
+	}
+	
+	@Operation(description = "This Endpoint can be used to Update The Admin With The Required Information",
+			responses = {
+					@ApiResponse(responseCode = "202",description = "Admin Updated",
+							content = {
+									@Content(schema = @Schema(implementation = AdminResponse.class))
+					}),
+					@ApiResponse(responseCode = "404",description = "Admin Not Updated",
+					content = {
+							@Content(schema = @Schema(implementation = AdminNotFoundException.class))
+			})
+	})
+	@PutMapping("admin/{adminId}")
+	public ResponseEntity<ResponseStructure<AdminResponse>> updateAdminById(@RequestBody AdminRequest adminRequest,@PathVariable String adminId){
+		AdminResponse response = adminService.updateAdminById(adminRequest, adminId);
+		return responseBuilder.success(HttpStatus.OK, "Admin Updated", response);
 	}
 }
