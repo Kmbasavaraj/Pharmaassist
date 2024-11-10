@@ -1,5 +1,7 @@
 package com.jsp.pharma.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -81,5 +83,22 @@ public class AdminController {
 	public ResponseEntity<ResponseStructure<AdminResponse>> updateAdminById(@RequestBody AdminRequest adminRequest,@PathVariable String adminId){
 		AdminResponse response = adminService.updateAdminById(adminRequest, adminId);
 		return responseBuilder.success(HttpStatus.OK, "Admin Updated", response);
+	}
+	
+	@Operation(description = "This Endpoint can be used to Find All Admins In The Database",
+			responses = {
+					@ApiResponse(responseCode = "202",description = "Admins Found",
+							content = {
+									@Content(schema = @Schema(implementation = AdminResponse.class))
+					}),
+					@ApiResponse(responseCode = "404",description = "Admins Not Found",
+					content = {
+							@Content(schema = @Schema(implementation = AdminNotFoundException.class))
+			})
+	})
+	@GetMapping("admins")
+	public ResponseEntity<ResponseStructure<List<AdminResponse>>> findAll(){
+		List<AdminResponse> responses = adminService.findAll();
+		return responseBuilder.success(HttpStatus.FOUND, "Admins Found", responses);
 	}
 }

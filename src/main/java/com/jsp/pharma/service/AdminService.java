@@ -1,9 +1,12 @@
 package com.jsp.pharma.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.jsp.pharma.entity.Admin;
 import com.jsp.pharma.exception.AdminNotFoundByIdException;
+import com.jsp.pharma.exception.AdminNotFoundException;
 import com.jsp.pharma.mapper.AdminMapper;
 import com.jsp.pharma.repository.AdminRepository;
 import com.jsp.pharma.requestdtos.AdminRequest;
@@ -39,6 +42,16 @@ public class AdminService {
 							})
 							.map(adminMapper::mapToAdminResponse)
 							.orElseThrow(()->new AdminNotFoundByIdException("Admin not Found To Update"));
+	}
+	
+	public List<AdminResponse> findAll(){
+		List<Admin> admins = adminRepository.findAll();
+		if(admins.isEmpty()) {
+			throw new AdminNotFoundException("Admins Not Found");
+		}
+		return admins.stream()
+					.map(adminMapper::mapToAdminResponse)
+					.toList();
 	}
 	
 }
