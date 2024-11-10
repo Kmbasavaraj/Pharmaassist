@@ -4,6 +4,7 @@ import com.jsp.pharma.config.GenerateCustomId;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Admin {
@@ -13,6 +14,16 @@ public class Admin {
 	private String email;
 	private String phoneNumber;
 	private String password;
+	
+	@OneToOne
+	private Pharmacy pharma;
+	
+	public Pharmacy getPharma() {
+		return pharma;
+	}
+	public void setPharma(Pharmacy pharma) {
+		this.pharma = pharma;
+	}
 	
 	public String getAdminId() {
 		return adminId;
